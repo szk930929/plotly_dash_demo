@@ -158,9 +158,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     dff = df[df['Year'] == year_value]
 
     fig = px.scatter(x=dff[dff['Indicator Name'] == xaxis_column_name]['Value'],
-            y=dff[dff['Indicator Name'] == yaxis_column_name]['Value'],
-            hover_name=dff[dff['Indicator Name'] == yaxis_column_name]['Country Name']
-          )
+                     y=dff[dff['Indicator Name'] == yaxis_column_name]['Value'],
+                     hover_name=dff[dff['Indicator Name'] == yaxis_column_name]['Country Name'])
 
     fig.update_traces(customdata=dff[dff['Indicator Name'] == yaxis_column_name]['Country Name'])
 
