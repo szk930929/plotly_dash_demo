@@ -3,10 +3,12 @@
 
 import json
 import dash
+import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
 import pandas as pd
+from collections import OrderedDict
 
 from dash.dependencies import Input, Output
 
@@ -24,6 +26,19 @@ markdown_text = '''
 ### Dash and Markdown
 '''
 
+data = OrderedDict(
+    [
+        ("Date", ["2015-01-01", "2015-10-24", "2016-05-10", "2017-01-10", "2018-05-10", "2018-08-15"]),
+        ("Region", ["Montreal", "Toronto", "New York City", "Miami", "San Francisco", "London"]),
+        ("Temperature", [1, -20, 3.512, 4, 10423, -441.2]),
+        ("Humidity", [10, 20, 30, 40, 50, 60]),
+        ("Pressure", [2, 10924, 3912, -10, 3591.2, 15]),
+    ]
+)
+dfTable = pd.DataFrame(
+    OrderedDict([(name, col_data * 5) for (name, col_data) in data.items()])
+)
+
 dfScatter = pd.read_csv('https://gist.githubusercontent.com/chriddyp/5d1ea79569ed194d432e56108a04d188/raw/a9f9e8076b837d541398e999dcbac2b2826a81f8/gdp-life-exp-2007.csv')
 
 available_continent = dfScatter['continent'].unique()
@@ -36,7 +51,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
-print(df)
 available_indicators = df['Indicator Name'].unique()
 
 app.layout = html.Div([
@@ -58,7 +72,8 @@ app.layout = html.Div([
   ),
   html.Div([
       html.Pre(id='click-data', style=styles['pre']),
-  ], className='three columns'),
+  ], style={'width': '100%'}),
+  html.Br(),
   html.Div([
       html.Div([
           dcc.Dropdown(
@@ -86,7 +101,7 @@ app.layout = html.Div([
               value='Linear',
               labelStyle={'display': 'inline-block', 'marginTop': '5px'}
           )
-      ], style={'width': '49%', 'float': 'right', 'display': 'inline-block'})
+      ], style={'width': '49%', 'display': 'inline-block'})
     ], style={
         'padding': '10px 5px'
   }),
@@ -108,7 +123,13 @@ app.layout = html.Div([
       value=df['Year'].max(),
       marks={str(year): str(year) for year in df['Year'].unique()},
       step=None
-  ), style={'width': '49%', 'padding': '0px 20px 20px 20px'})
+  ), style={'width': '49%', 'padding': '0px 20px 20px 20px'}),
+  dash_table.DataTable(
+    data=dfTable.to_dict('records'),
+    columns=[{'id': c, 'name': c} for c in dfTable.columns],
+    page_action='none',
+    style_table={'height': '300px', 'overflowY': 'auto'}
+  )
 ])
 
 
