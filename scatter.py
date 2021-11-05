@@ -9,9 +9,9 @@ import dash_html_components as html
 import plotly.express as px
 import pandas as pd
 from collections import OrderedDict
+import dash_leaflet as dl
 
 from dash.dependencies import Input, Output
-
 
 app = dash.Dash(__name__)
 
@@ -46,14 +46,14 @@ opts = [{'label': 'all', 'value': 'all'}]
 for i in available_continent:
     opts.append({'label': i, 'value': i})
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
 df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
 available_indicators = df['Indicator Name'].unique()
 
-app.layout = html.Div([
+app.layout = html.Div(className="app-content", children = [
+    # html.Link(
+    #     rel='stylesheet',
+    #     href='./styles.css'
+    # ),
   dcc.Markdown(children=markdown_text),
   html.Div([
       "Input: ",
@@ -129,7 +129,9 @@ app.layout = html.Div([
     columns=[{'id': c, 'name': c} for c in dfTable.columns],
     page_action='none',
     style_table={'height': '300px', 'overflowY': 'auto'}
-  )
+  ),
+  dl.Map([dl.TileLayer(), dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': False, 'startDirectly': True}})],
+           id="map", bounds=[[31.23136, 121.47004], [31.347832, 121.586912], [31.084481, 121.230475]], style={'height': '500px'})
 ])
 
 
