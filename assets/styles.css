@@ -134,11 +134,11 @@ body {
   font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: rgb(50, 50, 50); 
   margin: 0;
-  background: #E8DAC5;
 }
 
 .app-content {
   text-align: center;
+  background: #E8DAC5;
 }
 
 
