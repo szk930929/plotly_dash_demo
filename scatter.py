@@ -54,10 +54,6 @@ df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
 available_indicators = df['Indicator Name'].unique()
 
 app.layout = html.Div(className="app-content", children=[
-    # html.Link(
-    #     rel='stylesheet',
-    #     href='./styles.css'
-    # ),
     dcc.Markdown(children=markdown_text),
     html.Div([
         "Input: ",
